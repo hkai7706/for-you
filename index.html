@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ff6f91">
+  <title>မေးစရာလေးတစ်ခုရှိလို့ 💌</title>
+  <style>
+    :root {
+      --rose: #ff4f79;
+      --rose-2: #ff879d;
+      --cream: #fffaf6;
+      --ink: #563642;
+      --green: #33c78a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 24px 0;
+      padding: max(24px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      font-family: "Noto Sans Myanmar", "Myanmar Text", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(255,255,255,.8), transparent 27%),
+        radial-gradient(circle at 84% 82%, rgba(255,224,179,.7), transparent 32%),
+        linear-gradient(145deg, #ffe0e9, #fff0c8 47%, #ffc1d2);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    body::before {
+      content: "";
+      pointer-events: none;
+      position: fixed;
+      inset: -25%;
+      background: conic-gradient(from 110deg, rgba(255,92,130,.12), rgba(255,255,255,.05), rgba(255,184,104,.16), rgba(255,92,130,.12));
+      animation: drift 14s linear infinite;
+    }
+
+    .sparkles, .hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+
+    .sparkle {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.95);
+      box-shadow: 0 0 12px rgba(255,255,255,.9);
+      animation: twinkle 2.4s ease-in-out infinite;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 2;
+      width: min(92vw, 460px);
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: #bf4966;
+      font-size: clamp(.86rem, 2.8vw, 1rem);
+      font-weight: 400;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      position: relative;
+      min-height: 500px;
+      display: grid;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 34px;
+      background: rgba(255,255,255,.76);
+      box-shadow: 0 24px 70px rgba(167,65,91,.24), inset 0 1px 0 white;
+      backdrop-filter: blur(15px);
+    }
+
+    .screen {
+      position: relative;
+      grid-area: 1 / 1;
+      min-width: 0;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      padding: 32px 25px;
+      transition: opacity .45s ease, transform .45s ease;
+    }
+
+    .screen.hidden { visibility: hidden; opacity: 0; transform: translateY(15px) scale(.96); pointer-events: none; }
+    .screen.show { opacity: 1; transform: none; }
+
+    .mail {
+      position: relative;
+      width: 230px;
+      height: 160px;
+      margin: 110px 0 45px;
+      border-radius: 12px 12px 22px 22px;
+      background: linear-gradient(145deg, #ff6787, #ff436e);
+      box-shadow: 0 18px 32px rgba(255,65,108,.3);
+    }
+
+    .mail::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+      border-radius: inherit;
+      background: linear-gradient(145deg, #ff829b, #f9416c);
+    }
+
+    .letter {
+      position: absolute;
+      z-index: 2;
+      left: 20px;
+      right: 20px;
+      bottom: 43px;
+      min-height: 185px;
+      padding: 22px 18px;
+      border-radius: 12px;
+      background: var(--cream);
+      box-shadow: 0 10px 26px rgba(99,45,59,.16);
+      transform: translateY(-35px) rotate(-1deg);
+    }
+
+    .letter strong { color: var(--rose); font-family: Georgia, serif; font-size: 1.15rem; font-weight: 400; }
+    .letter p { margin: 16px 0 0; font-size: .94rem; line-height: 1.8; }
+
+    h1 { margin: 0; font-size: clamp(1.55rem, 6vw, 2.15rem); font-weight: 400; line-height: 1.55; }
+    .subtitle { margin: 10px 0 0; color: #87616e; font-size: .95rem; line-height: 1.65; }
+
+    .open-btn, .answer {
+      border: 0;
+      border-radius: 999px;
+      color: white;
+      font: 400 1rem/1 system-ui, sans-serif;
+      cursor: pointer;
+      box-shadow: 0 12px 22px rgba(220,62,99,.25);
+      transition: transform .2s ease, box-shadow .2s ease;
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .open-btn { padding: 17px 31px; background: linear-gradient(110deg, var(--rose), #ff765e); }
+    @media (hover: hover) {
+      .open-btn:hover, .answer:hover { transform: translateY(-3px); box-shadow: 0 16px 28px rgba(220,62,99,.33); }
+    }
+
+    .character {
+      width: 150px;
+      height: 150px;
+      margin: 24px 0 10px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      font-size: 5.2rem;
+      background: linear-gradient(145deg, #fff, #ffe1e8);
+      box-shadow: inset 0 0 0 8px rgba(255,255,255,.7), 0 15px 30px rgba(206,76,108,.18);
+      animation: bob 2.6s ease-in-out infinite;
+    }
+
+    .sticker {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 24px;
+    }
+    .sticker[hidden] { display: none; }
+
+    .success-sticker {
+      width: 150px;
+      height: 150px;
+      animation: bob 2.6s ease-in-out infinite;
+      filter: drop-shadow(0 10px 16px rgba(206,76,108,.18));
+    }
+
+    .answers { position: relative; width: 100%; height: 125px; margin-top: 20px; }
+    .answer { position: absolute; min-width: 0; width: calc(50% - 8px); padding: 17px 12px; line-height: 1.6; }
+    #yesBtn { left: calc(50% - 138px); top: 15px; background: linear-gradient(110deg, #28c98a, #4fdb9f); }
+    #noBtn { left: calc(50% + 10px); top: 15px; background: linear-gradient(110deg, #ff5577, #ff815f); transition: left .22s ease, top .22s ease, transform .2s ease; }
+
+    .big-heart { font-size: 7rem; filter: drop-shadow(0 16px 20px rgba(255,66,106,.28)); animation: heartbeat 1s ease-in-out infinite; }
+    .success h1 { color: #ef426d; margin-top: 14px; }
+    .tiny { margin-top: 24px; color: #b06579; font-size: .82rem; }
+
+    .floating-heart {
+      position: absolute;
+      bottom: -40px;
+      color: #ff4e7a;
+      animation: rise var(--duration) linear forwards;
+      opacity: 0;
+      filter: drop-shadow(0 4px 5px rgba(155,34,65,.2));
+    }
+
+    @keyframes drift { to { transform: rotate(360deg); } }
+    @keyframes twinkle { 50% { opacity: .2; transform: scale(.45); } }
+    @keyframes bob { 50% { transform: translateY(-9px) rotate(2deg); } }
+    @keyframes heartbeat { 40% { transform: scale(1.12); } 70% { transform: scale(.96); } }
+    @keyframes rise {
+      0% { opacity: 0; transform: translateY(0) rotate(0); }
+      15% { opacity: .85; }
+      100% { opacity: 0; transform: translateY(-115vh) rotate(45deg); }
+    }
+
+    #yesBtn { left: 0; }
+    #noBtn { left: calc(50% + 8px); }
+
+    @media (max-width: 520px) {
+      .shell { width: 100%; max-width: 460px; }
+      .card { min-height: 500px; border-radius: 28px; }
+      .screen { padding: 26px 18px; }
+      .mail { transform: scale(.92); }
+      .answers { height: 145px; }
+      .answer { min-height: 54px; }
+      #yesBtn { left: 0; }
+      #noBtn { left: calc(50% + 8px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sparkles" id="sparkles"></div>
+  <div class="hearts" id="hearts"></div>
+
+  <main class="shell">
+    <p class="eyebrow">မင်းအတွက် စာလေးတစ်စောင် ✨</p>
+    <section class="card">
+      <div class="screen show" id="intro">
+        <div class="mail" aria-hidden="true">
+          <div class="letter">
+            <strong>💌 မင်းလေးဖတ်ဖို့</strong>
+            <p>ပြောစရာလေးရှိလို့…<br>ဖတ်ကြည့်ပေးနော် 🤍</p>
+          </div>
+        </div>
+        <button class="open-btn" id="openBtn">ဖွင့်ကြည့်မယ် 💖</button>
+      </div>
+
+      <div class="screen hidden" id="question">
+        <h1>တစ်ခုလောက် မေးမယ်နော် 🥺</h1>
+        <div class="character" aria-hidden="true">
+          <img class="sticker" id="reactionSticker" src="assets/sticker.webp" alt="" width="150" height="150" draggable="false">
+          <video class="sticker" id="reactionVideo" src="assets/sticker7.webm" poster="assets/sticker3.webp" width="150" height="150" muted loop playsinline preload="auto" hidden></video>
+        </div>
+        <p class="subtitle">ချစ်လားဟင် 💗</p>
+        <div class="answers" id="answerArea">
+          <button class="answer" id="yesBtn">ချစ်တယ် 💕</button>
+          <button class="answer" id="noBtn">မချစ်ဘူး 🙈</button>
+        </div>
+      </div>
+
+      <div class="screen hidden success" id="success">
+        <img class="sticker success-sticker" src="assets/sticker8.webp" alt="" width="150" height="150" draggable="false">
+        <h1>ကိုယ်လည်း မင်းကို<br>အရမ်းချစ်တယ်နော်!</h1>
+        <p class="subtitle">နေ့တိုင်း ဒီထက်ပိုပြီး<br>ချစ်ပေးသွားမယ်နော် ✨</p>
+        <p class="tiny">ပြီးရင်ပြန်ပြောဦးနော် 💌</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Easy-to-edit text settings
+    const TEXT = {
+      question: "ချစ်လားဟင် 💗",
+      success: "ကိုယ်လည်း မင်းကို အရမ်းချစ်တယ်နော်!"
+    };
+
+    const intro = document.querySelector("#intro");
+    const question = document.querySelector("#question");
+    const success = document.querySelector("#success");
+    const openBtn = document.querySelector("#openBtn");
+    const yesBtn = document.querySelector("#yesBtn");
+    const noBtn = document.querySelector("#noBtn");
+    const hearts = document.querySelector("#hearts");
+    const reactionSticker = document.querySelector("#reactionSticker");
+    const reactionVideo = document.querySelector("#reactionVideo");
+    const noStickers = [
+      "assets/sticker4.webp",
+      "assets/sticker3.webp",
+      "assets/sticker99.webp",
+      "assets/sticker000.webp",
+      "assets/sticker77.webp",
+      "assets/sticker11.webp",
+      "assets/sticke5r.webp",
+      "assets/sticker6.webp",
+      "assets/sticker0.webp",
+      "assets/sticker7.webm",
+      "assets/sticker33.webp",
+      "assets/sticker66.webp",
+      "assets/sticker22.webp",
+      "assets/sticker44.webp",
+      "assets/sticker55.webp",
+      "assets/sticker2.webp"
+    ];
+    // Preload reactions so the first tap shows each sticker immediately.
+    noStickers.filter(src => src.endsWith(".webp")).forEach(src => {
+      const img = new Image(); img.src = src;
+    });
+
+    function showReaction(src) {
+      reactionVideo.pause();
+      const isVideo = src.endsWith(".webm");
+      reactionVideo.hidden = !isVideo;
+      reactionSticker.hidden = isVideo;
+      if (isVideo) {
+        reactionVideo.currentTime = 0;
+        reactionVideo.play().catch(() => {
+          reactionVideo.hidden = true;
+          reactionSticker.hidden = false;
+          reactionSticker.src = "assets/sticker3.webp";
+        });
+      } else {
+        reactionSticker.src = src;
+      }
+    }
+    const noLines = [
+      "တကယ်ကြီးလား 🥺",
+      "စဉ်းစားဦးနော် 🙈",
+      "စနေတာမလား 🤭",
+      "မယုံပါဘူးနော် 😝",
+      "နည်းနည်းလေးတောင် မချစ်ဘူးလား 🥹",
+      "သေချာပြန်စဉ်းစားဦး 😌",
+      "ကိုယ်ကတော့ ချစ်တယ်နော် 💗",
+      "အဖြေလေး ပြောင်းမလား 🙈",
+      "ချစ်တယ်လို့ ပြောပါဦး 💕",
+      "ရှက်နေတာလား 🤭",
+      "သိပါတယ် ချစ်နေတာကို 😚",
+      "မင်းပြုံးနေတာ သိတယ်နော် 😏",
+      "စိတ်ကောက်မှာနော် 😝",
+      "မုန့်ဝယ်ကျွေးမယ်လေ 🍰",
+      "အခုရော ချစ်ပြီလား 🥺",
+      "ချစ်တယ်ဆို ပြုံးပြ 😚"
+    ];
+    let noCount = 0;
+
+    document.querySelector("#question .subtitle").textContent = TEXT.question;
+
+    function switchScreen(from, to) {
+      from.classList.remove("show");
+      from.classList.add("hidden");
+      setTimeout(() => {
+        to.classList.remove("hidden");
+        to.classList.add("show");
+      }, 260);
+    }
+
+    function moveNo() {
+      if (noCount >= noLines.length) {
+        noBtn.hidden = true;
+        yesBtn.focus();
+        return;
+      }
+      const previous = noBtn.getBoundingClientRect();
+      showReaction(noStickers[noCount % noStickers.length]);
+      noBtn.textContent = noLines[noCount++];
+      // Escape the card's clipping and transformed containers.
+      document.body.appendChild(noBtn);
+      Object.assign(noBtn.style, {
+        position: "fixed",
+        width: "auto",
+        zIndex: "10",
+        maxWidth: "calc(100vw - 32px)",
+        minWidth: "0",
+        lineHeight: "1.6",
+        transform: "none",
+        transition: "none"
+      });
+      const btn = noBtn.getBoundingClientRect();
+      const maxX = Math.max(16, window.innerWidth - btn.width - 16);
+      const maxY = Math.max(16, window.innerHeight - btn.height - 16);
+      const yes = yesBtn.getBoundingClientRect();
+      let destination = { x: 16, y: 16 };
+      let bestDistance = -1;
+      for (let i = 0; i < 40; i++) {
+        const x = 16 + Math.random() * (maxX - 16);
+        const y = 16 + Math.random() * (maxY - 16);
+        if (x < yes.right + 12 && x + btn.width > yes.left - 12 &&
+            y < yes.bottom + 12 && y + btn.height > yes.top - 12) continue;
+        const distance = Math.hypot(x - previous.left, y - previous.top);
+        if (distance > bestDistance) {
+          destination = { x, y };
+          bestDistance = distance;
+        }
+        if (distance > Math.min(window.innerWidth, window.innerHeight) * .35) break;
+      }
+      noBtn.style.left = `${destination.x}px`;
+      noBtn.style.top = `${destination.y}px`;
+    }
+
+    window.addEventListener("resize", () => {
+      if (noBtn.parentElement !== document.body || noBtn.hidden) return;
+      const btn = noBtn.getBoundingClientRect();
+      noBtn.style.left = `${Math.max(16, Math.min(btn.left, window.innerWidth - btn.width - 16))}px`;
+      noBtn.style.top = `${Math.max(16, Math.min(btn.top, window.innerHeight - btn.height - 16))}px`;
+    });
+
+    function makeHeart(burst = false) {
+      const heart = document.createElement("span");
+      heart.className = "floating-heart";
+      heart.textContent = ["♥", "💗", "💕", "💖"][Math.floor(Math.random() * 4)];
+      heart.style.left = `${Math.random() * 100}%`;
+      heart.style.fontSize = `${14 + Math.random() * (burst ? 34 : 18)}px`;
+      heart.style.setProperty("--duration", `${3 + Math.random() * 4}s`);
+      hearts.appendChild(heart);
+      setTimeout(() => heart.remove(), 7200);
+    }
+
+    for (let i = 0; i < 22; i++) {
+      const dot = document.createElement("i");
+      dot.className = "sparkle";
+      dot.style.left = `${Math.random() * 100}%`;
+      dot.style.top = `${Math.random() * 100}%`;
+      dot.style.animationDelay = `${Math.random() * 2.4}s`;
+      document.querySelector("#sparkles").appendChild(dot);
+    }
+
+    setInterval(() => makeHeart(false), 850);
+    openBtn.addEventListener("click", () => switchScreen(intro, question));
+    // Mobile-friendly: the NO button moves only after a normal tap/click.
+    // No mouse-position or touch-position tracking is used.
+    noBtn.addEventListener("click", moveNo);
+    yesBtn.addEventListener("click", () => {
+      reactionVideo.pause();
+      noBtn.hidden = true;
+      switchScreen(question, success);
+      for (let i = 0; i < 28; i++) setTimeout(() => makeHeart(true), i * 75);
+    });
+  </script>
+</body>
+</html>
+
