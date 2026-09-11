@@ -428,11 +428,44 @@
     }
 
     setInterval(() => makeHeart(false), 850);
-    openBtn.addEventListener("click", () => switchScreen(intro, question));
-    // Mobile-friendly: the NO button moves only after a normal tap/click.
-    // No mouse-position or touch-position tracking is used.
-    noBtn.addEventListener("click", moveNo);
-    yesBtn.addEventListener("click", () => {
+    function onActivate(button, action) {
+      let touchStart = null;
+      let lastTap = -Infinity;
+      button.addEventListener("touchstart", event => {
+        touchStart = event.touches.length === 1
+          ? { x: event.touches[0].clientX, y: event.touches[0].clientY,
+              id: event.touches[0].identifier }
+          : null;
+      }, { passive: true });
+      button.addEventListener("touchmove", event => {
+        if (!touchStart) return;
+        const touch = Array.from(event.touches).find(t => t.identifier === touchStart.id);
+        if (!touch || Math.hypot(touch.clientX - touchStart.x, touch.clientY - touchStart.y) > 12) {
+          touchStart = null;
+        }
+      }, { passive: true });
+      button.addEventListener("touchcancel", () => { touchStart = null; });
+      button.addEventListener("touchend", event => {
+        const start = touchStart;
+        touchStart = null;
+        if (!start || event.touches.length) return;
+        const touch = Array.from(event.changedTouches).find(t => t.identifier === start.id);
+        if (!touch || Math.hypot(touch.clientX - start.x, touch.clientY - start.y) > 12) return;
+        // Cancel the synthetic click before moving the button or changing screens.
+        event.preventDefault();
+        lastTap = Date.now();
+        action();
+      }, { passive: false });
+      button.addEventListener("click", event => {
+        // Keep mouse and keyboard activation; ignore a tap's duplicate click.
+        if (event.detail !== 0 && Date.now() - lastTap < 700) return;
+        action();
+      });
+    }
+
+    onActivate(openBtn, () => switchScreen(intro, question));
+    onActivate(noBtn, moveNo);
+    onActivate(yesBtn, () => {
       reactionVideo.pause();
       noBtn.hidden = true;
       switchScreen(question, success);
@@ -441,3 +474,4 @@
   </script>
 </body>
 </html>
+
